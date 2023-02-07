@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="mataheader :: headfragment">
+<style type="text/css">
+	.anyClass {
+  		height:150px;
+  		overflow-y: scroll;
+	}
+	
+</style>
+</head>
+<body>
+
+<!-- Main Wrapper -->
+	<div class="main-wrapper">
+		<div th:replace="matatopmenu :: topmenufragment"> </div>
+		<div th:replace="mataleftmenu :: leftmenu"></div>
+
+	</div>
+	
+	<!-- Page Wrapper -->
+            <div class="page-wrapper">
+			
+				<!-- Page Content -->
+                <div class="content container-fluid">
+				
+	
+					<!-- /Page Header -->
+				
+					<div class="row" th:object="${countDto}">
+						<div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+							<div class="card dash-widget">
+								<div class="card-body">
+									<span class="dash-widget-icon"><i class="la la-city"></i></span>
+									<div class="dash-widget-info">
+										<h3><font color="#1863D6"><span  th:text="*{totalOrganization}"></span></font></h3>
+										<span>Total Organization</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+							<div class="card dash-widget">
+								<div class="card-body">
+<!-- 									<a href="/transaction"> -->
+									<span class="dash-widget-icon"><i class="la la-video"></i></span>
+									<div class="dash-widget-info">
+										<h3><font color="#1863D6"><span th:text="*{totalInstalledDevice}"></span></font></h3>
+										<span>Total Device</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+							<div class="card dash-widget">
+								<div class="card-body">
+									<span class="dash-widget-icon"><i class="las la-satellite-dish"></i></span>
+									<div class="dash-widget-info">
+										<h3><font color="#1863D6"><span th:text="*{totalOnline}"></span></font></h3>
+										<span>Total Online</span>
+									</div>
+									</div>
+								</div>
+						</div>
+						<div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+							<div class="card dash-widget">
+								<div class="card-body">
+									<span class="dash-widget-icon"><i class="las la-video-slash"></i></span>
+									<div class="dash-widget-info">
+										<h3><font color="#1863D6"><span th:text="*{totalOffline}"></span></font></h3>
+										<span>Total Offline</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="row">
+					<div class="col-md-4  d-flex ">
+							<div class="card flex-fill dash-statistics ">
+								<div class="card-header" style="text-align: center;">
+									<h3 class="card-title mb-0">Organization Wise Device Status</h3>
+								</div>
+								<div class="card-body">
+									<div class="stats-list realtime-list"></div>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+					
+		</div>
+		</div>
+	
+<div th:replace="matafooter :: footer"></div>
+
+	
+<!-- load graph -->
+	<script src="/assets/js/loader.js"></script>
+<!-- Custom JS -->
+	<script src="/assets/js/app.js"></script> 
+
+<script>
+$(document).ready(function() {
+	google.charts.load('current', {'packages' : [ 'corechart' ]});
+	drawDashboard()
+	
+	$("#dashboard_menu").addClass("active");
+	
+});
+	function drawDashboard(){
+		$.ajax({
+			url : '/api/device-status-chart',
+			success : function(result) {
+				var deviceData = result.device;
+				
+				deviceList(deviceData);
+			}
+		 });
+	
+		function deviceList(result) {
+			var deviceData = '' ;
+			$(".stats-list").html('');
+			$.each(result, function(i, obj) {
+				var value= (obj.onlineDevice/obj.totalDevice)*100;
+				deviceData += '<div class="stats-info">'
+					+'<p>'+obj.organization+ '<strong>'+obj.onlineDevice+' <small>/ '+obj.totalDevice+'</small></strong></p>'
+					+'<div class="progress">'
+					+'<div class="progress-bar bg-primary" role="progressbar" style="width: '+value+'%" aria-valuenow="'+value+'" aria-valuemin="0" aria-valuemax="100"></div>'
+					+'</div>'
+					+'</div>';
+			});
+			$(".stats-list").append(deviceData);
+		}
+		
+    }
+	
+   
+</script>
+</body>
+</html>
