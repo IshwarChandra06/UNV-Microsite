@@ -199,10 +199,18 @@ public class ExcelEmployeeImport {
 			 if(null!=date)
 			 employee.setDob(dateFormat.format(date));
 		 }
+		 else if (currentCell.getCellType() == CellType.NUMERIC) {
+	           date = currentCell.getDateCellValue();
+	           String dateStr = dateFormat.format(date);
+	           employee.setDob(dateStr);
+			}
 		 else {
-			 date = (Date)currentCell.getDateCellValue();
-			 if(null!=date)
-			 employee.setDob(dateFormat.format(date));
+			 if(!currentCell.getStringCellValue().isEmpty()) {
+				 date = (Date)currentCell.getDateCellValue();
+				 if(null!=date)
+				 employee.setDob(dateFormat.format(date));
+			 }
+			
 		 }
 	}
 	
@@ -215,10 +223,18 @@ public class ExcelEmployeeImport {
 			 if(null!=date)
 			 employee.setJoinDate(dateFormat.format(date));
 		 }
-		 else {
-			 date = (Date)currentCell.getDateCellValue();
-			 if(null!=date)
-			 employee.setJoinDate(dateFormat.format(date));
+		  else if (currentCell.getCellType() == CellType.NUMERIC) {
+			  date = currentCell.getDateCellValue();
+	           String dateStr = dateFormat.format(date);
+	           employee.setJoinDate(dateStr);
+			} 
+		  else {
+			  if(!currentCell.getStringCellValue().isEmpty()) {
+				  date = (Date)currentCell.getDateCellValue();
+					 if(null!=date)
+					 employee.setJoinDate(dateFormat.format(date));
+			  }
+			
 		 }
 	}
 

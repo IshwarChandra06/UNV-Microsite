@@ -52,6 +52,7 @@ public class ExportEmployee {
 
 	private List<Employee> getListOfEmployee(Long id, String name, String empId, String designation, String department,
 			String orgName, String company) {
+		Specification<Employee> isDeletedFalse = generalSpecification.isDeletedSpecification();
 		Specification<Employee> idSpec = generalSpecification.longSpecification(id, ApplicationConstants.ID);
 		Specification<Employee> employeeNameSpec = generalSpecification.stringSpecification(name,EmployeeConstants.NAME);
 		Specification<Employee> employeeIdSpec = generalSpecification.stringSpecification(empId,EmployeeConstants.EMPID);
@@ -60,7 +61,7 @@ public class ExportEmployee {
     	Specification<Employee> orgSpec = generalSpecification.foreignKeyStringSpecification(orgName, AreaConstants.ORGANIZATION,EmployeeConstants.NAME);
     	Specification<Employee> companySpec = generalSpecification.stringSpecification(company,DailyAttendanceConstants.COMPANY);
 		
-    	List<Employee> employeeList =employeeRepository.findAll(idSpec.and(employeeNameSpec)
+    	List<Employee> employeeList =employeeRepository.findAll(idSpec.and(employeeNameSpec).and(isDeletedFalse)
 				.and(employeeIdSpec).and(departmentSpec).and(designationSpec).and(orgSpec).and(companySpec));
 		return employeeList;
 	}
