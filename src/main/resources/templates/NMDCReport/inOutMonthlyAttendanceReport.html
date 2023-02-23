@@ -169,7 +169,7 @@
 					var oldInput = document.getElementById(selectedvalue[i]);
 					if(oldInput == null){
 						if(selectedvalue[i]=="month"){
-							inputText += '<div class="col-md-3"><div class="form-group">'+
+							inputText += '<div class="col-md-3" id="remove-element-'+selectedvalue[i]+'"><div class="form-group">'+
 							'<label><b>'+selectedvalue[i][0].toUpperCase()+ selectedvalue[i].slice(1)+':</b></label> '+
 							'<input type="month" placeholder="Enter '+selectedvalue[i]+'" id="'+selectedvalue[i]+'" class="form-control">'+
 						'</div></div>';

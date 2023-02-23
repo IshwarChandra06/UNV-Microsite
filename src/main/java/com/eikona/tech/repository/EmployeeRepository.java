@@ -43,5 +43,7 @@ public interface EmployeeRepository extends DataTablesRepository<Employee, Long>
 
 	@Query("Select e from com.eikona.tech.entity.Employee e where e.isDeleted=false and e.empId like %:empId")
 	Employee findByEmpIdCustom(String empId);
+
+	Employee findByDeviceEmpIdAndOrganizationAndIsDeletedFalse(String empId, Organization organization);
 	
 }

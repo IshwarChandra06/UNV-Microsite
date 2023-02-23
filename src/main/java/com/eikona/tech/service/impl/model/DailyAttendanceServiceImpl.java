@@ -63,6 +63,7 @@ public class DailyAttendanceServiceImpl implements DailyAttendanceService {
 			Date yesterday=calendarUtil.getPreviousDate(new Date(), -1, 0, 0,0);
 			String date=inputFormat.format(yesterday);
 			generateDailyAttendance(date,date,"NMDC Nagarnar");
+			generateDailyAttendance(date,date,"ESL Bokaro");
 		}
 		
 	}
@@ -311,7 +312,7 @@ public class DailyAttendanceServiceImpl implements DailyAttendanceService {
 
 
 	@Override
-	public PaginationDto<DailyReport> searchByField(Long id, String sDate, String eDate, String employeeId,
+	public PaginationDto<DailyReport> searchByField(String sDate, String eDate, String employeeId,
 			String employeeName,String department, String designation,String company, String status,String shift, int pageno,
 			String sortField, String sortDir, String orgName) {
 
@@ -337,7 +338,7 @@ public class DailyAttendanceServiceImpl implements DailyAttendanceService {
 		
 		
 		
-		Page<DailyReport> page = getDailyAttendancePage(id, employeeId, employeeName,"", department,
+		Page<DailyReport> page = getDailyAttendancePage(employeeId, employeeName,"", department,
 				designation, pageno, sortField, sortDir, startDate, endDate, status,shift, orgName,company);
 		List<DailyReport> employeeShiftList = page.getContent();
 
@@ -348,7 +349,7 @@ public class DailyAttendanceServiceImpl implements DailyAttendanceService {
 		return dtoList;
 	}
 	
-	private Page<DailyReport> getDailyAttendancePage(Long id, String employeeId, String employeeName, String organization,
+	private Page<DailyReport> getDailyAttendancePage(String employeeId, String employeeName, String organization,
 			String department, String designation, int pageno, String sortField, String sortDir, Date startDate,
 			Date endDate, String status,String shift, String orgName, String company) {
 		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending()
@@ -356,7 +357,6 @@ public class DailyAttendanceServiceImpl implements DailyAttendanceService {
 
 		Pageable pageable = PageRequest.of(pageno - NumberConstants.ONE, NumberConstants.TEN, sort);
 
-		Specification<DailyReport> idSpec = generalSpecificationDailyAttendance.longSpecification(id, ApplicationConstants.ID);
 		Specification<DailyReport> dateSpec = generalSpecificationDailyAttendance.dateSpecification(startDate, endDate, ApplicationConstants.DATE);
 		Specification<DailyReport> empIdSpec = generalSpecificationDailyAttendance.stringSpecification(employeeId, DailyAttendanceConstants.EMPLOYEE_ID);
 		Specification<DailyReport> empNameSpec = generalSpecificationDailyAttendance.stringSpecification(employeeName, DailyAttendanceConstants.EMPLOYEE_NAME);
@@ -367,7 +367,7 @@ public class DailyAttendanceServiceImpl implements DailyAttendanceService {
 		Specification<DailyReport> companySpec = generalSpecificationDailyAttendance.stringSpecification(company, DailyAttendanceConstants.COMPANY);
 		Specification<DailyReport> statusSpec = generalSpecificationDailyAttendance.stringSpecification(status, DailyAttendanceConstants.ATTENDANCE_STATUS);
 		Specification<DailyReport> shiftSpec = generalSpecificationDailyAttendance.stringSpecification(shift, DailyAttendanceConstants.SHIFT);
-		Page<DailyReport> page = dailyAttendanceRepository.findAll(statusSpec.and(idSpec).and(dateSpec).and(empIdSpec)
+		Page<DailyReport> page = dailyAttendanceRepository.findAll(statusSpec.and(dateSpec).and(empIdSpec)
 				.and(empNameSpec).and(deptSpec).and(desiSpec).and(userOrgSpec).and(companySpec).and(orgSpec).and(shiftSpec), pageable);
 		return page;
 	}

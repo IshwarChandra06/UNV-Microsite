@@ -43,8 +43,13 @@ public class SavingCropImageUtil {
 		fileObj.setContentMimeType(ApplicationConstants.MIME_TYPE_JPG);
 		String dateFolder = contentDateFolderformat.format(trans.getPunchDate());
 		String imageFileDate = contentImageFileformat.format(trans.getPunchDate());
+		String organization="";
+		if(null!=trans.getOrganization())
+		 organization=trans.getOrganization();
+		else
+		 organization="Default";
 		fileObj.setContentPath(fileObj.getContentMimeType().split(ApplicationConstants.DELIMITER_FORWARD_SLASH)[NumberConstants.ZERO] 
-				+ ApplicationConstants.DELIMITER_FORWARD_SLASH +DefaultConstants.TRANSACTION_STORE_FOLDER+ApplicationConstants.DELIMITER_FORWARD_SLASH + dateFolder 
+				+ ApplicationConstants.DELIMITER_FORWARD_SLASH +organization+ApplicationConstants.DELIMITER_FORWARD_SLASH + dateFolder 
 				+ ApplicationConstants.DELIMITER_FORWARD_SLASH + imageFileDate + ApplicationConstants.DELIMITER_HYPHEN + trans.getEmployeeCode() + ApplicationConstants.EXTENSION_JPG);
 
 		String path = DefaultConstants.CONTENT_STORE_ROOT_PATH + fileObj.getContentPath();

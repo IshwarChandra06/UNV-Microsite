@@ -5,7 +5,7 @@ public class DeviceDto {
 	private String device;
 	private String serialNo;
 	private String organization;
-	private long tatalPerson;
+	private long totalPerson;
 	private long totalTransaction;
 	private long totalUnregisterTransaction;
 	private long capacity;
@@ -22,11 +22,12 @@ public class DeviceDto {
 	public void setSerialNo(String serialNo) {
 		this.serialNo = serialNo;
 	}
-	public long getTatalPerson() {
-		return tatalPerson;
+	
+	public long getTotalPerson() {
+		return totalPerson;
 	}
-	public void setTatalPerson(long tatalPerson) {
-		this.tatalPerson = tatalPerson;
+	public void setTotalPerson(long totalPerson) {
+		this.totalPerson = totalPerson;
 	}
 	public long getTotalTransaction() {
 		return totalTransaction;

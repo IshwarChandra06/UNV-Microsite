@@ -168,8 +168,6 @@ public class DashboardController {
 		    return returnObject;
 	}
 	
-	
-	
 	@GetMapping(value="/api/device-table")
 	public @ResponseBody List<DeviceDto> deviceInfo() {
 
@@ -185,11 +183,21 @@ public class DashboardController {
 					.findUnregisterCountByDateAndDeviceCustom(format.format(new Date()), device.getName());
 			deviceDto.setCapacity(10000);
 			deviceDto.setDevice(device.getName());
-			deviceDto.setOrganization(device.getOrganization().getName());
+			if(null!=device.getOrganization())
+			 deviceDto.setOrganization(device.getOrganization().getName());
+			else
+				deviceDto.setOrganization("");
 			deviceDto.setSerialNo(device.getSerialNo());
-			deviceDto.setTatalPerson(device.getTotalPerson());
-			deviceDto.setTotalTransaction(transactionCount);
-			deviceDto.setTotalUnregisterTransaction(unregisterTransaction);
+//			deviceDto.setTatalPerson(device.getTotalPerson());
+			if(null != transactionCount)
+				deviceDto.setTotalTransaction(transactionCount);
+			else
+				deviceDto.setTotalTransaction(0);
+			if(null != unregisterTransaction)
+				deviceDto.setTotalUnregisterTransaction(unregisterTransaction);
+			else
+				deviceDto.setTotalUnregisterTransaction(0);
+			
 			deviceDtoList.add(deviceDto);
 		}
 

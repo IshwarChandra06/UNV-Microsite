@@ -79,7 +79,6 @@
 						<div class="form-group form-focus select-focus">
 						 	<label ><b>Add Filter:</b></label>
 					        <select id="people" name="people" multiple>
-								<option value="id" >Id</option>
 								<option value="name" >Name</option>
 								<option value="empId" >Emp Id</option>
 								<option value="deviceEmpId" >Device Emp Id</option>
@@ -93,7 +92,6 @@
 					<div class="col-sm-6 col-md-1" id="hide-search" style="display: none;"></div>
 				</div>
 				<div style="display:none">
-					<input type="hidden" id="orginalById">
 					<input type="hidden" id="orginalByName">
 					<input type="hidden" id="orginalByEmpId">
 					<input type="hidden" id="orginalByDeviceEmpId">
@@ -215,7 +213,6 @@
 			
 			
 			$(function(){
-        		var id = document.getElementById('orginalById').value;
 				var name= document.getElementById('orginalByName').value;
 				var empId= document.getElementById('orginalByEmpId').value;
 				var deviceEmpId= document.getElementById('orginalByDeviceEmpId').value;
@@ -223,7 +220,7 @@
 				var department= document.getElementById('orginalByDepartment').value;
 				var designation= document.getElementById('orginalByDesignation').value;
 				
-				ajaxCall(id, name,empId,company,department,designation,deviceEmpId, "sortByField", "previousPage", 1,"id","desc");
+				ajaxCall(name,empId,company,department,designation,deviceEmpId, "sortByField", "previousPage", 1,"id","desc");
         	})
         	
         	
@@ -232,7 +229,6 @@
 				var value = $(this).val();
 				var valueList = value.split("-");
 				
-				var id = document.getElementById('orginalById').value;
 				var name= document.getElementById('orginalByName').value;
 				var empId= document.getElementById('orginalByEmpId').value;
 				var department= document.getElementById('orginalByDepartment').value;
@@ -240,7 +236,7 @@
 				var company= document.getElementById('orginalByCompany').value;
 				var deviceEmpId= document.getElementById('orginalByDeviceEmpId').value;
 				
-				ajaxCall(id, name,empId,company,department,designation,deviceEmpId, "sortByField", "previousPage", valueList[0],valueList[1],valueList[2]);
+				ajaxCall(name,empId,company,department,designation,deviceEmpId, "sortByField", "previousPage", valueList[0],valueList[1],valueList[2]);
 				
         	})
         	//end sort 
@@ -249,7 +245,6 @@
 				var value = $(this).val();
 				var valueList = value.split("-");
 				
-				var id = document.getElementById('orginalById').value;
 				var name= document.getElementById('orginalByName').value;
 				var empId= document.getElementById('orginalByEmpId').value;
 				var department= document.getElementById('orginalByDepartment').value;
@@ -257,7 +252,7 @@
 				var company= document.getElementById('orginalByCompany').value;
 				var deviceEmpId= document.getElementById('orginalByDeviceEmpId').value;
 				
-				ajaxCall(id, name,empId,company,department,designation,deviceEmpId, "sortByField", "previousPage", valueList[0],valueList[1],valueList[2]);
+				ajaxCall(name,empId,company,department,designation,deviceEmpId, "sortByField", "previousPage", valueList[0],valueList[1],valueList[2]);
         	})
 			
 			//start search and sort field
@@ -266,7 +261,6 @@
 				var value = $(this).val();
 				var valueList = value.split("-");
 				
-				var id = document.getElementById('id').value;
 				var name = document.getElementById('name').value;
 				var empId = document.getElementById('empId').value;
 				var department = document.getElementById('department').value;
@@ -274,7 +268,7 @@
 				var deviceEmpId= document.getElementById('deviceEmpId').value;
 				var company= document.getElementById('company').value;
 				uncheckedRemove();
-				ajaxCall(id, name,empId,company,department,designation,deviceEmpId, "sortBySearchField", "nextPage", valueList[0],valueList[1],valueList[2]);
+				ajaxCall(name,empId,company,department,designation,deviceEmpId, "sortBySearchField", "nextPage", valueList[0],valueList[1],valueList[2]);
 				
         	})
         	//end search and sort field
@@ -284,7 +278,6 @@
 				var value = $(this).val();
 				var valueList = value.split("-");
 				
-				var id = document.getElementById('id').value;
 				var name = document.getElementById('name').value;
 				var empId = document.getElementById('empId').value;
 				var department = document.getElementById('department').value;
@@ -292,12 +285,11 @@
 				var company= document.getElementById('company').value;
 				var deviceEmpId= document.getElementById('deviceEmpId').value;
 				uncheckedRemove();
-				ajaxCall(id, name,empId,company,department,designation,deviceEmpId, "sortBySearchField", "nextPage", valueList[0],valueList[1],valueList[2]);
+				ajaxCall(name,empId,company,department,designation,deviceEmpId, "sortBySearchField", "nextPage", valueList[0],valueList[1],valueList[2]);
         	})
 			
         	$(document).on('click', '.searchButtonField', function(e) {
         		uncheckedAppend();
-        		var id = document.getElementById('id').value;
 				var name = document.getElementById('name').value;
 				var empId = document.getElementById('empId').value;
 				var department = document.getElementById('department').value;
@@ -305,12 +297,11 @@
 				var company= document.getElementById('company').value;
 				var deviceEmpId= document.getElementById('deviceEmpId').value;
 				uncheckedRemove();
-				ajaxCall(id, name,empId,company,department,designation,deviceEmpId, "sortBySearchField", "nextPage", 1,"id","desc");
+				ajaxCall(name,empId,company,department,designation,deviceEmpId, "sortBySearchField", "nextPage", 1,"id","desc");
         	})
 	        	
-	        function ajaxCall(id, name,empId,company,department,designation,deviceEmpId, headFlag, pageFlag, pageno, sortField,sortDir) {
+	        function ajaxCall(name,empId,company,department,designation,deviceEmpId, headFlag, pageFlag, pageno, sortField,sortDir) {
 				var data = {
-	           		"id" : id,
 	           		"name":name,
 	           		"empId":empId,
 	           		"company":company,
@@ -345,7 +336,7 @@
 			function tableHeader(result, flag) {
 				var table_header ='';
 				if(result.data.length == 0) {
-					table_header = '<th><b>Id</b></th>'+
+					table_header = 
 						'<th><b>Name</b></th>'+
 						'<th><b>Emp Id</b></th>'+
 						'<th><b>Device Emp Id</b></th>'+
@@ -371,8 +362,7 @@
 					if(showUpdate || showDelete)
 						table_header+='<th><b> Actions</b></th>';
 				}else {
-					table_header = '<th><button  value="'+result.page_number+'-id-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Id</b></button>'+
-		   			'</th><th>'+
+					table_header = '<th>'+
 		   			'<button  value="'+result.page_number+'-name-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Name</b></button>'+
 		   			'</th><th>'+		
 						'<button  value="'+result.page_number+'-empId-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Emp Id</b></button>'+	
@@ -424,8 +414,7 @@
 			function tableData(result) {
 				var table_data ='';
            		$.each(result.data, function(i, customer) {
-           			table_data +='<tr>' +
-               	 		'<td>' + customer.id + '</td>';
+           			table_data +='<tr>' ;
            			if(null != customer.name){
               	 		table_data += '<td>' + customer.name + '</td>';
               	 	} else{
@@ -697,17 +686,17 @@
 			$(document).on('click', '.export-data-by-search', function(e) {
 				uncheckedAppend();
 				var type = $(this).val();
-				var id = document.getElementById('id').value;
 	            var employeeName = document.getElementById('name').value;
 	            var employeeId = document.getElementById('empId').value;
 	            var designation = document.getElementById('designation').value;
 	            var department = document.getElementById('department').value;
+	            var deviceEmpId= document.getElementById('deviceEmpId').value;
 	            var company = document.getElementById('company').value;
 	            uncheckedRemove();
                 
                 if("excel" == type){
                 	$("#excel-button").html('').append('<button  value ="excel" type="button" class="btn add-btn" disabled><i class="las la-download"></i> Export To Excel  <span class="spinner-border spinner-border-sm"></span></button>');
-                	exportData(id,employeeName,employeeId,company,department,designation,"export-data-by-search","xlsx");
+                	exportData(employeeName,employeeId,deviceEmpId,company,department,designation,"export-data-by-search","xlsx");
                 }
 			})
 			
@@ -717,15 +706,15 @@
                 
                 if("excel" == type){
                 	$("#excel-button").html('').append('<button  value ="excel" type="button" class="btn add-btn" disabled><i class="las la-download"></i> Export To Excel  <span class="spinner-border spinner-border-sm"></span></button>');
-                	exportData(null,"","","","","","export-data","xlsx");
+                	exportData("","","","","","","export-data","xlsx");
                 }
 			})
 			
-			function  exportData(id,name,empId,company,department,designation,excelButtonClass,flag) {
+			function  exportData(name,empId,deviceEmpId,company,department,designation,excelButtonClass,flag) {
                 var data = {
-					"id":id,
                		"name" : name,
                		"empId":empId,
+               		"deviceEmpId":deviceEmpId,
                		"company":company,
                		"department":department,
                		"designation":designation,

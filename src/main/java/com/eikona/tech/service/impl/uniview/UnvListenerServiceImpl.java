@@ -84,9 +84,8 @@ public class UnvListenerServiceImpl {
 			JSONArray libMatarray) {
 		if (libMatarray.length() > NumberConstants.ZERO) {
 			JSONObject empObj = libMatarray.getJSONObject(NumberConstants.ZERO).getJSONObject(UnvDeviceConstants.MATCH_PERSON_INFO);
-			
-			Employee employee = employeeRepository.findByDeviceEmpIdAndIsDeletedFalse(empObj.getString(UnvDeviceConstants.PERSON_CODE));
 			Device deviceObj = deviceRepository.findBySerialNoAndIsDeletedFalse(jsonPersonVerification.getString(UnvDeviceConstants.DEVICE_CODE));
+			Employee employee = employeeRepository.findByDeviceEmpIdAndOrganizationAndIsDeletedFalse(empObj.getString(UnvDeviceConstants.PERSON_CODE),deviceObj.getOrganization());
 			
 			transaction.setName(empObj.getString(UnvDeviceConstants.PERSON_NAME));
 			transaction.setEmployeeCode (empObj.getString(UnvDeviceConstants.PERSON_CODE));

@@ -43,7 +43,7 @@ public class TransactionServiceImpl implements TransactionService {
 	
 
 	@Override
-	public PaginationDto<Transaction> searchByField(String employee, Long id, String sDate, String eDate, String employeeId, String employeeCode,
+	public PaginationDto<Transaction> searchByField(String sDate, String eDate, String employeeId, String employeeCode,
 			String employeeName, String device, String department, String designation,String company, int pageno,
 			String sortField, String sortDir, String orgName) {
 		Date startDate = null;
@@ -66,7 +66,7 @@ public class TransactionServiceImpl implements TransactionService {
 			sortField = ApplicationConstants.ID;
 		}
 
-		Page<Transaction> page = getTransactionBySpecification(employee, id, employeeId, employeeCode, employeeName, device, department,
+		Page<Transaction> page = getTransactionBySpecification(employeeId, employeeCode, employeeName, device, department,
 				designation,company, pageno, sortField, sortDir, startDate, endDate, orgName);
 		List<Transaction> transactionList = page.getContent();
 
@@ -77,7 +77,7 @@ public class TransactionServiceImpl implements TransactionService {
 		return dtoList;
 	}
 
-	private Page<Transaction> getTransactionBySpecification(String employee, Long id, String employeeId, String employeeCode, String employeeName,
+	private Page<Transaction> getTransactionBySpecification( String employeeId, String employeeCode, String employeeName,
 			String device, String department, String designation,String company, int pageno, String sortField,
 			String sortDir, Date startDate, Date endDate, String orgName) {
 
@@ -86,14 +86,13 @@ public class TransactionServiceImpl implements TransactionService {
 
 		Pageable pageable = PageRequest.of(pageno -NumberConstants.ONE , NumberConstants.TEN, sort);
 
-		Specification<Transaction> allSpec = null;
-		if(TransactionConstants.ONLY_EMPLOYEE.equalsIgnoreCase(employee)) {
-			allSpec = generalSpecification.isNotNullSpecification(TransactionConstants.EMP_ID);
-		}else {
-			allSpec = generalSpecification.isNotNullSpecification(ApplicationConstants.DELIMITER_EMPTY);
-		}
+//		Specification<Transaction> allSpec = null;
+//		if(TransactionConstants.ONLY_EMPLOYEE.equalsIgnoreCase(employee)) {
+//			allSpec = generalSpecification.isNotNullSpecification(TransactionConstants.EMP_ID);
+//		}else {
+//			allSpec = generalSpecification.isNotNullSpecification(ApplicationConstants.DELIMITER_EMPTY);
+//		}
 		
-		Specification<Transaction> idSpec = generalSpecification.longSpecification(id, ApplicationConstants.ID);
 		Specification<Transaction> dateSpec = generalSpecification.dateSpecification(startDate, endDate,
 				TransactionConstants.PUNCH_DATE);
 		Specification<Transaction> empIdSpec = generalSpecification.stringSpecification(employeeId, TransactionConstants.EMP_ID);
@@ -108,8 +107,8 @@ public class TransactionServiceImpl implements TransactionService {
 		Specification<Transaction> orgSpec = generalSpecification.stringSpecification(orgName,
 				AreaConstants.ORGANIZATION);
 
-		Page<Transaction> page = transactionRepository.findAll(idSpec.and(dateSpec).and(empIdSpec).and(empNameSpec)
-				.and(devSpec).and(deptSpec).and(desiSpec).and(allSpec).and(orgSpec).and(empCodeSpec).and(companySpec), pageable);
+		Page<Transaction> page = transactionRepository.findAll(dateSpec.and(empIdSpec).and(empNameSpec)
+				.and(devSpec).and(deptSpec).and(desiSpec).and(orgSpec).and(empCodeSpec).and(companySpec), pageable);
 		return page;
 	}
 

@@ -192,7 +192,7 @@ public class ExcelEmployeeImport {
 	
 	private void setDob(Employee employee,Cell currentCell) throws ParseException {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
+		SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 		Date date =null;
 		 if (currentCell.getCellType() == CellType.STRING) {
 			 date=inputFormat.parse(currentCell.getStringCellValue().trim());
@@ -216,7 +216,7 @@ public class ExcelEmployeeImport {
 	
 	private void setJoinDate(Employee employee,Cell currentCell) throws ParseException {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
+		SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 		Date date =null;
 		 if (currentCell.getCellType() == CellType.STRING) {
 			 date=inputFormat.parse(currentCell.getStringCellValue().trim());

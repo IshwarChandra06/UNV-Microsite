@@ -69,7 +69,7 @@ public class Employee extends Auditable<String> implements Serializable {
 	@Column
 	private String city;
 	
-	@Column(unique = true)
+	@Column
 	@NotBlank(message = "Please provide a unique device employee id")
 	private String deviceEmpId;
 

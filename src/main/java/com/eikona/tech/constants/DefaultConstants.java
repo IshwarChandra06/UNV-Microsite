@@ -6,7 +6,6 @@ public final class DefaultConstants {
 	public static final Long DEFAULT_ORGANIZATION_ID=1l;
 	public static final Long DEFAULT_BRANCH_ID=1l;
 	
-	public static final String TRANSACTION_STORE_FOLDER="Nagarnar";
 	
 	public static final String CONTENT_STORE_ROOT_PATH="C:/Users/Administrator/Documents/workspace/";
 	
