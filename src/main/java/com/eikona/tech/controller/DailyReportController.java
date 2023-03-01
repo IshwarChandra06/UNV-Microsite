@@ -41,6 +41,7 @@ public class DailyReportController {
 	private String enableGenerate;
 	
 	@GetMapping("/daily-reports")
+	@PreAuthorize("hasAuthority('dailyreport_view')")
 	public String viewHomePage(Model model) {
 		model.addAttribute("enableGenerate", enableGenerate);
 		return "reports/daily_report";

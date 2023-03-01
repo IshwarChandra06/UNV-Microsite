@@ -9,6 +9,7 @@ import java.util.List;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -59,7 +60,8 @@ public class DashboardController {
 		
 	}
 	
-	@GetMapping(value={"/home"})
+	@GetMapping("/home")
+	@PreAuthorize("hasAuthority('dashboard_view')")
 	public String dashboard(Model model) {
 		try {
 			CountDto countDto = new CountDto();
