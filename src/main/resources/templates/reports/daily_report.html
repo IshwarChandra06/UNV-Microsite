@@ -11,7 +11,7 @@
     <title>MATA</title>
     
     <!-- Favicon -->
-      <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.png">
+      <link rel="shortcut icon" type="image/x-icon" href="assets/img/mata_logo.png">
 
 	<!-- Bootstrap CSS -->
       <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
@@ -84,7 +84,8 @@
 								<option value="designation" >Designation</option>
 								<option value="shift">Shift</option>
 								<option value="company" >Company</option>
-								<option value="status" >Status</option>
+								<option value="status" >Attendance Status</option>
+								<option value="punchStatus" >Punch Status</option>
 					        </select>
 						</div>
 					</div>
@@ -206,6 +207,15 @@
 										'<option value="Absent">Absent</option>'+
 							        '</select>'+
 							'</div></div>';
+							}else if(selectedvalue[i]=="punchStatus"){
+								inputText += '<div class="col-md-3"><div class="form-group">'+
+								'<label><b>'+selectedvalue[i][0].toUpperCase()+ selectedvalue[i].slice(1)+':</b></label> '+
+								'<select class="form-control" id="'+selectedvalue[i]+'">'+
+										'<option value="" >Select Punch Status</option>'+
+										'<option value="Punched">Punched</option>'+
+										'<option value="Not Punched">Not Punched</option>'+
+							        '</select>'+
+							'</div></div>';
 							}
 							else{
 								inputText += '<div class="col-md-3" id="remove-element-'+selectedvalue[i]+'"><div class="form-group">'+
@@ -275,7 +285,7 @@
                 var sDate = "";
 //                 var sDate = new Date().toISOString().slice(0, 10);
 				
-				ajaxCall(sDate, sDate, employeeId, employeeName, department, designation,company,status,shift, "sortByField", "previousPage", valueList[0],valueList[1],valueList[2]);
+				ajaxCall(sDate, sDate, employeeId, employeeName, department, designation,company,status,shift,"", "sortByField", "previousPage", valueList[0],valueList[1],valueList[2]);
 				
         	})
         	//end sort 
@@ -290,7 +300,7 @@
                 var sDate = "";//new Date().toISOString().slice(0, 10);
                 var status = document.getElementById('orginalByStatus').value;
 				
-				ajaxCall(sDate, sDate, employeeId, employeeName, department, designation,company,status,shift, "sortByField", "previousPage", 1,"id","desc");
+				ajaxCall(sDate, sDate, employeeId, employeeName, department, designation,company,status,shift,"", "sortByField", "previousPage", 1,"id","desc");
         	})
         	
 			$(document).on('click', '.previousPage', function(e) {
@@ -306,7 +316,7 @@
  				 var shift = document.getElementById('orginalByShift').value;
  				var sDate = "";//new Date().toISOString().slice(0, 10);
 				
-				ajaxCall(sDate, sDate, employeeId, employeeName, department, designation,company,status,shift, "sortByField", "previousPage", valueList[0],valueList[1],valueList[2]);
+				ajaxCall(sDate, sDate, employeeId, employeeName, department, designation,company,status,shift,"", "sortByField", "previousPage", valueList[0],valueList[1],valueList[2]);
         	})
 			
 			//start search and sort field
@@ -324,9 +334,10 @@
 				var status = document.getElementById('status').value;
 				var company = document.getElementById('company').value;
 				var shift = document.getElementById('shift').value;
+				var punchStatus = document.getElementById('punchStatus').value;
 				checkDate();
 				uncheckedRemove();
-				ajaxCall(sDate, eDate, employeeId, employeeName, department, designation,company,status,shift, "sortBySearchField", "nextPage", valueList[0],valueList[1],valueList[2]);
+				ajaxCall(sDate, eDate, employeeId, employeeName, department, designation,company,status,shift,punchStatus, "sortBySearchField", "nextPage", valueList[0],valueList[1],valueList[2]);
 				
         	})
         	//end search and sort field
@@ -345,9 +356,10 @@
 				var status = document.getElementById('status').value;
 				var company = document.getElementById('company').value;
 				var shift = document.getElementById('shift').value;
+				var punchStatus = document.getElementById('punchStatus').value;
 				 checkDate();
 				 uncheckedRemove();
-				ajaxCall(sDate, eDate, employeeId, employeeName, department, designation,company,status,shift, "sortBySearchField", "nextPage", valueList[0],valueList[1],valueList[2]);
+				ajaxCall(sDate, eDate, employeeId, employeeName, department, designation,company,status,shift,punchStatus, "sortBySearchField", "nextPage", valueList[0],valueList[1],valueList[2]);
         	})
 			
         	$(document).on('click', '.searchButtonField', function(e) {
@@ -362,9 +374,10 @@
                 var status = document.getElementById('status').value;
                 var company = document.getElementById('company').value;
                  var shift = document.getElementById('shift').value;
+                 var punchStatus = document.getElementById('punchStatus').value;
                  checkDate();
                  uncheckedRemove();
-                ajaxCall(sDate, eDate, employeeId, employeeName,  department, designation,company,status,shift, "sortBySearchField", "nextPage", 1,"id","desc");
+                ajaxCall(sDate, eDate, employeeId, employeeName,  department, designation,company,status,shift,punchStatus, "sortBySearchField", "nextPage", 1,"id","desc");
         	})
         	
         	function checkDate() {
@@ -387,7 +400,7 @@
 				}
 		}
 	        	
-	        function ajaxCall(sDate, eDate, employeeId, employeeName,  department, designation,company,status,shift, headFlag, pageFlag, pageno, sortField,sortDir) {
+	        function ajaxCall(sDate, eDate, employeeId, employeeName,  department, designation,company,status,shift,punchStatus, headFlag, pageFlag, pageno, sortField,sortDir) {
 				var data = {
 	           		"sDate":sDate,
 	           		"eDate":eDate,
@@ -398,6 +411,7 @@
 	           		"company":company,
 	           		"status":status,
 	           		"shift":shift,
+	           		"punchStatus":punchStatus,
 	           		"pageno":pageno,
 	           		"sortField":sortField,
 	           		"sortDir":sortDir
@@ -435,6 +449,7 @@
 					'<td><b>Employee Id </b></td>'+
 					'<td><b>Employee Name</b></td>'+
 					'<th><b>Attendance Status</th>'+
+					'<th><b>Punch Status</th>'+
 					'<td><b>Company</b></td>'+
 					'<td><b>Department</b></td>'+
 					'<td><b>Designation</b></td>'+
@@ -445,6 +460,7 @@
 					'<th><b>Employee In Time</b></th>'+
 					'<th><b>Employee Out Time</b></th>'+
 					'<th><b>Work Time</b></th>'+
+					'<th><b>Over Time(In hr)</b></th>'+
 					'<th><b>Early Coming</b></th>'+
 					'<th><b>Late Going</b></th>'+
 					'<th><b>Early Going</b></th>'+
@@ -466,6 +482,8 @@
 		   			'</th><th>'+
 		   				'<button  value="'+result.page_number+'-attendanceStatus-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Attendance Status</b></button>'+
 		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-punchInDevice-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Punch Status</b></button>'+
+		   			'</th><th>'+
 	   					'<button  value="'+result.page_number+'-company-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Company</b></button>'+
 	   				'</th><th>'+	
 	   					'<button  value="'+result.page_number+'-department-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Department</b></button>'+
@@ -485,6 +503,8 @@
 		   				'<button  value="'+result.page_number+'-empOutTime-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Employee Out Time</b></button>'+
 		   			'</th><th>'+
 		   				'<button  value="'+result.page_number+'-workTime-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Work Time</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-overTime-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Over Time(In hr)</b></button>'+
 		   			'</th><th>'+
 		   				'<button  value="'+result.page_number+'-earlyComing-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Early Coming</b></button>'+
 		   			'</th><th>'+
@@ -511,11 +531,12 @@
 			function tableData(result) {
 				var table_data ='';
            		$.each(result.data, function(i, customer) {
-           			table_data +='<tr>'+
+           			table_data +='<tr class="text-center">'+
 	           		'<td>' + customer.dateStr + '</td>' +
 	            	'<td>' + customer.empId + '</td>' +
 	            	'<td>'+ ((null != customer.employeeName)?customer.employeeName.toLocaleUpperCase():'')+'</td>'+
 	            	'<td>' + ((null != customer.attendanceStatus)?customer.attendanceStatus:'')+ '</td>' +
+	            	'<td>' + ((null != customer.punchInDevice)?customer.punchInDevice:'')+ '</td>' +
 	            	'<td>' + ((null != customer.company)?customer.company:'')+ '</td>'+
 	            	'<td>' + ((null != customer.department)?customer.department:'')+ '</td>'+
                		'<td>' + ((null != customer.designation)?customer.designation:'')+ '</td>' +
@@ -526,6 +547,7 @@
                		'<td>' + ((null != customer.empInTime)?customer.empInTime:'')+ '</td>' +
                		'<td>' + ((null != customer.empOutTime)?customer.empOutTime:'')+ '</td>' +
                		'<td>' + ((null != customer.workTime)?customer.workTime:'') + '</td>'+
+               		'<td>' + ((null != customer.overTimeStr)?customer.overTimeStr:'') + '</td>'+
                		'<td>' + ((null != customer.earlyComing)?customer.earlyComing:'') + '</td>'+
                		'<td>' + ((null != customer.lateGoing)?customer.lateGoing:'') + '</td>'+
                		'<td>' + ((null != customer.earlyGoing)?customer.earlyGoing:'') + '</td>'+
@@ -699,10 +721,11 @@
 	            var company = document.getElementById('company').value;
 				var status = document.getElementById('status').value;
 				var shift = document.getElementById('shift').value;
+				var punchStatus = document.getElementById('punchStatus').value;
 				uncheckedRemove();
                 if("excel" == type){
                 	$("#excel-button").html('').append('<button  value ="excel" type="button" class="btn add-btn" disabled><i class="las la-download"></i> Export To Excel  <span class="spinner-border spinner-border-sm"></span></button>');
-                	exportData(sDate,eDate,employeeName,employeeId,designation,department,company,status,shift,"export-data-by-search","xlsx");
+                	exportData(sDate,eDate,employeeName,employeeId,designation,department,company,status,shift,punchStatus,"export-data-by-search","xlsx");
                 }
 			})
 			
@@ -712,11 +735,11 @@
                 
                 if("excel" == type){
                 	$("#excel-button").html('').append('<button  value ="excel" type="button" class="btn add-btn" disabled><i class="las la-download"></i> Export To Excel  <span class="spinner-border spinner-border-sm"></span></button>');
-                	exportData("","","","","","","","","","export-data","xlsx");
+                	exportData("","","","","","","","","","","export-data","xlsx");
                 }
 			})
 			
-			function  exportData(sDate,eDate,employeeName,employeeId,designation,department,company,status,shift,excelButtonClass,flag) {
+			function  exportData(sDate,eDate,employeeName,employeeId,designation,department,company,status,shift,punchStatus,excelButtonClass,flag) {
                 var data = {
             		"sDate" : sDate,
                		"eDate" : eDate,
@@ -727,6 +750,7 @@
                		"company":company,
                		"status":status,
                		"shift":shift,
+               		"punchStatus":punchStatus,
 	           		"flag":flag
                 }; 
     	            

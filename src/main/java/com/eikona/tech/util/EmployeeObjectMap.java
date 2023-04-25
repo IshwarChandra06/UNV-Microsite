@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.eikona.tech.entity.Department;
 import com.eikona.tech.entity.Designation;
 import com.eikona.tech.entity.Employee;
+import com.eikona.tech.entity.Organization;
 import com.eikona.tech.repository.DepartmentRepository;
 import com.eikona.tech.repository.DesignationRepository;
 import com.eikona.tech.repository.EmployeeRepository;
@@ -71,6 +72,15 @@ public class EmployeeObjectMap {
 	
 	public Map<String, Employee> getEmployeeByEmpId(){
 		List<Employee> employeeList = employeeRepository.findAllByIsDeletedFalse();
+		Map<String, Employee> employeeMap = new HashMap<String, Employee>();
+		
+		for(Employee employee: employeeList ) {
+			employeeMap.put(employee.getEmpId(), employee);
+		}
+		return employeeMap;
+	}
+	public Map<String, Employee> getEmployeeByEmpId(Organization organization){
+		List<Employee> employeeList = employeeRepository.findAllByIsDeletedFalseAndOrganization(organization);
 		Map<String, Employee> employeeMap = new HashMap<String, Employee>();
 		
 		for(Employee employee: employeeList ) {

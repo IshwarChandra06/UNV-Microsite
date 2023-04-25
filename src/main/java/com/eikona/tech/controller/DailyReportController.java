@@ -4,7 +4,6 @@ import java.security.Principal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -23,6 +22,7 @@ import com.eikona.tech.entity.DailyReport;
 import com.eikona.tech.entity.User;
 import com.eikona.tech.repository.UserRepository;
 import com.eikona.tech.service.DailyAttendanceService;
+import com.eikona.tech.service.impl.model.DailyAttendanceServiceImpl;
 import com.eikona.tech.util.ExportDailyReports;
 
 @Controller
@@ -30,6 +30,9 @@ public class DailyReportController {
 
 	@Autowired
 	private DailyAttendanceService dailyAttendanceService;
+	
+	@Autowired
+	private DailyAttendanceServiceImpl dailyAttendanceServiceImpl;
 
 	@Autowired
 	private UserRepository userRepository;
@@ -59,29 +62,31 @@ public class DailyReportController {
 	@RequestMapping(value = "/api/search/daily-reports", method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('dailyreport_view')")
 	public @ResponseBody PaginationDto<DailyReport> search(String sDate,String eDate, String employeeId, String employeeName, String department, String designation,
-			String company,String status,String shift,int pageno, String sortField, String sortDir, Principal principal) {
+			String company,String status,String shift,String punchStatus,int pageno, String sortField, String sortDir, Principal principal) {
 		
 		User userObj = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
 		String orgName = (null == userObj.getOrganization()? null : userObj.getOrganization().getName());
-		PaginationDto<DailyReport> dtoList = dailyAttendanceService.searchByField(sDate, eDate, employeeId, employeeName, department, designation,company,status,shift, pageno, sortField, sortDir, orgName);
+		PaginationDto<DailyReport> dtoList = dailyAttendanceService.searchByField(sDate, eDate, employeeId, employeeName, department, designation,company,status,shift,punchStatus, pageno, sortField, sortDir, orgName);
 		
 		return dtoList;
 	}
 	
 	@RequestMapping(value = "/get/data-by-organization", method = RequestMethod.GET)
-	public @ResponseBody List<DailyReport> generateDailyReports(String sDate, String eDate, Principal principal) {
+	public @ResponseBody String generateDailyReports(String sDate, String eDate, Principal principal) {
 		
 		User userObj = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
 		String orgName = (null == userObj.getOrganization()? null : userObj.getOrganization().getName());
 		
-		return dailyAttendanceService.generateDailyAttendance(sDate, eDate, orgName);
+		dailyAttendanceService.generateDailyAttendance(sDate, eDate, orgName);
+		dailyAttendanceServiceImpl.generateNotPunchDailyAttendance(sDate, eDate, orgName);
+		return null;
 		
 	}
 	
 	@RequestMapping(value="/api/daily-attendance/export-to-file",method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('dailyreport_export')")
 	public void exportToFile(HttpServletResponse response,String sDate, String eDate, String employeeName,String employeeId, 
-			String designation, String department,String company,String status,String shift, String flag, Principal principal) {
+			String designation, String department,String company,String status,String shift,String punchStatus, String flag, Principal principal) {
 		User userObj = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
 		String orgName = (null == userObj.getOrganization()? null : userObj.getOrganization().getName());
 		 response.setContentType("application/octet-stream");
@@ -91,7 +96,7 @@ public class DailyReportController {
 			String headerValue = "attachment; filename=Daily_Report" + currentDateTime + "."+flag;
 			response.setHeader(headerKey, headerValue);
 		try {
-			exportDailyReports.fileExportBySearchValue(response,sDate, eDate, employeeName,employeeId, designation, department,company, status,shift, flag, orgName );
+			exportDailyReports.fileExportBySearchValue(response,sDate, eDate, employeeName,employeeId, designation, department,company, status,shift,punchStatus, flag, orgName );
 		} catch (Exception  e) {
 			e.printStackTrace();
 		}

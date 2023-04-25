@@ -51,7 +51,6 @@ public class ExcelEmployeeImport {
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
-	
 
 	@Autowired
 	private EmployeeObjectMap employeeObjectMap;
@@ -250,8 +249,10 @@ public class ExcelEmployeeImport {
 			int rowNumber = NumberConstants.ZERO;
 			Map<String, Designation> designationMap = employeeObjectMap.getDesignation();
 			Map<String, Department> deptMap = employeeObjectMap.getDepartment();
-			List<String> empIdList = employeeRepository.getEmpIdAndIsDeletedFalseCustom();
+//			List<String> empIdList = employeeRepository.getEmpIdAndIsDeletedFalseCustom();
+			
 			User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+			Map<String, Employee> employeeMap = employeeObjectMap.getEmployeeByEmpId(user.getOrganization());
 			Organization org = user.getOrganization();
 			while (rows.hasNext()) {
 				Row currentRow = rows.next();
@@ -266,12 +267,35 @@ public class ExcelEmployeeImport {
 
 				Employee employee = excelRowToEmployee(currentRow, org, designationMap, deptMap);
 
-				boolean isContains = empIdList.contains(employee.getEmpId());
-
-				if (!isContains && null != employee.getName() && !employee.getName().isEmpty()
+//				boolean isContains = empIdList.contains(employee.getEmpId());
+                Employee emp=employeeMap.get(employee.getEmpId());
+				
+				if(null==emp && null != employee.getName() && !employee.getName().isEmpty()
 						&& null != employee.getEmpId() && !employee.getEmpId().isEmpty())
 					employeeList.add(employee);
-
+				else if(null!=emp) {
+					emp.setFather(employee.getFather());
+					emp.setMother(employee.getMother());
+					emp.setDob(employee.getDob());
+					emp.setBloodGroup(employee.getBloodGroup());
+					emp.setBranch(employee.getBranch());
+					emp.setCardNo(employee.getCardNo());
+					emp.setCity(employee.getCity());
+					emp.setCompany(employee.getCompany());
+					emp.setDeviceEmpId(employee.getDeviceEmpId());
+					emp.setName(employee.getName());
+					emp.setGender(employee.getGender());
+					emp.setEmailOfficial(employee.getEmailOfficial());
+					emp.setEmailPersonal(employee.getEmailPersonal());
+					emp.setDepartment(employee.getDepartment());
+					emp.setDesignation(employee.getDesignation());
+					emp.setGrade(employee.getGrade());
+					emp.setMobile(employee.getMobile());
+					emp.setPermanentAddress(employee.getPermanentAddress());
+					emp.setResidentialAddress(employee.getResidentialAddress());
+					emp.setJoinDate(employee.getJoinDate());
+					employeeList.add(emp);
+				}
 				if (rowNumber % NumberConstants.HUNDRED == NumberConstants.ZERO) {
 					employeeRepository.saveAll(employeeList);
 					employeeList.clear();

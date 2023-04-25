@@ -196,8 +196,9 @@ public class NMDCMonthlyAttendanceReportServiceImpl{
 						dataList.add(NMDCConstants.ABSENT);
 					else if(NMDCConstants.PRESENT.equalsIgnoreCase(dailyAttendance.getAttendanceStatus()))
 						dataList.add("P");
-					else if(null == dailyAttendance.getAttendanceStatus() )
-							dataList.add(ApplicationConstants.DELIMITER_HYPHEN);
+					
+					else
+						dataList.add(ApplicationConstants.DELIMITER_HYPHEN);
 					
 					if (dailyReportListItr.hasNext()) {
 						dailyAttendance = dailyReportListItr.next();
@@ -571,7 +572,7 @@ public class NMDCMonthlyAttendanceReportServiceImpl{
 								outTimeList.add(dailyAttendance.getEmpOutTime());
 							}
 								
-							else if(null == dailyAttendance.getAttendanceStatus()) {
+							else{
 								dataList.add(ApplicationConstants.DELIMITER_HYPHEN);
 								inTimeList.add(ApplicationConstants.DELIMITER_HYPHEN);
 								outTimeList.add(ApplicationConstants.DELIMITER_HYPHEN);

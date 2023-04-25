@@ -100,7 +100,14 @@ public class GeneralSpecificationUtil<T> {
 		};
 	}
 	
-	
+	public Specification<T> stringEqualSpecification(String value, String field) {
+		return (root, query, cb) -> {
+			if (value == null || value.isEmpty()) {
+				return cb.conjunction();
+			}
+			return cb.equal(cb.lower(root.<String>get(field)), value);
+		};
+	}
 	public Specification<T> stringNotSpecification(String value, String field) {
 		return (root, query, cb) -> {
 			if (value == null || value.isEmpty()) {

@@ -113,6 +113,9 @@ public class DailyReport implements Serializable {
 
 	@Column
 	private String workTime;
+	
+	@Column
+	private String overTimeStr;
 
 	@Column
 	private Long overTime;
@@ -128,6 +131,10 @@ public class DailyReport implements Serializable {
 
 	@Column
 	private Long lateGoing;
+	
+	@Column
+	private String punchInDevice;
+
 
 	public String getOrganization() {
 		return organization;
@@ -434,6 +441,22 @@ public class DailyReport implements Serializable {
 
 	public Boolean getMissedOutPunch() {
 		return missedOutPunch;
+	}
+
+	public String getOverTimeStr() {
+		return overTimeStr;
+	}
+
+	public void setOverTimeStr(String overTimeStr) {
+		this.overTimeStr = overTimeStr;
+	}
+
+	public String getPunchInDevice() {
+		return punchInDevice;
+	}
+
+	public void setPunchInDevice(String punchInDevice) {
+		this.punchInDevice = punchInDevice;
 	}
 
 }
