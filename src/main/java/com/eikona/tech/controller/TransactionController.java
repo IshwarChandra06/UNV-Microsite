@@ -26,6 +26,7 @@ import com.eikona.tech.dto.PaginationDto;
 import com.eikona.tech.entity.Employee;
 import com.eikona.tech.entity.Transaction;
 import com.eikona.tech.entity.User;
+import com.eikona.tech.repository.EmployeeRepository;
 import com.eikona.tech.repository.TransactionRepository;
 import com.eikona.tech.repository.UserRepository;
 import com.eikona.tech.service.DepartmentService;
@@ -64,6 +65,9 @@ public class TransactionController {
 	private TransactionRepository transactionRepository;
 	
 	@Autowired
+	private EmployeeRepository employeeRepository;
+	
+	@Autowired
 	private ExportUnenrolledEmployee exportUnenrolled;
 	
 	@GetMapping("/transaction")
@@ -82,6 +86,29 @@ public class TransactionController {
 		return "transaction/unregistered_transaction";
 	}
 	
+	@GetMapping("/update-events")
+	public String updateEvents() {
+		List<Transaction> transList=(List<Transaction>) transactionRepository.findAll();
+		List<Transaction> saveList = new ArrayList<>();
+		for(Transaction tran:transList) {
+			if(null==tran.getOrganization() || tran.getOrganization().isEmpty()) {
+				Employee employee=employeeRepository.findByDeviceEmpIdAndIsDeletedFalse(tran.getEmployeeCode());
+				
+				if(null!=employee) {
+					if(null!=employee.getDepartment())
+					 tran.setDepartment(employee.getDepartment().getName());
+					if(null!=employee.getDesignation())
+					 tran.setDesignation(employee.getDesignation().getName());
+					tran.setEmpId(employee.getEmpId());
+					tran.setGrade(employee.getGrade());
+					tran.setOrganization(employee.getOrganization().getName());
+					saveList.add(tran);
+				}
+			}
+		}
+		transactionRepository.saveAll(saveList);
+		return "transaction/transaction_list";
+	}
 	@GetMapping("/add/employee-from-transaction/{id}")
 	@PreAuthorize("hasAuthority('transaction_view')")
 	public String editEmployee(@PathVariable(value = "id") long id, Model model, Principal principal) {

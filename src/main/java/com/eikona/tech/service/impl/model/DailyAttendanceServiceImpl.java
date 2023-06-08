@@ -147,7 +147,7 @@ public void generateNotPunchDailyAttendance(String sDate, String eDate, String o
 			List<Transaction> transactionList = transactionRepository.getTransactionData(startDate,
 					endDate, organization);
 			
-			List<DailyReport> delDailyReportList = dailyAttendanceRepository.findByDateAndOrganization(startDate,
+			List<DailyReport> delDailyReportList = dailyAttendanceRepository.findByDateAndOrganization(startDate, 
 					endDate, organization);
 
 			Map<String, DailyReport> existingReportMap = new HashMap<String, DailyReport>();
@@ -198,10 +198,6 @@ public void generateNotPunchDailyAttendance(String sDate, String eDate, String o
 					
 					if(!reportMap.containsKey(key)) {
 						
-						if(transaction.getDeviceName().contains("TEPP Exit")) {
-							continue;
-						}
-						
 						dailyReport = new DailyReport();
 						dailyReport.setEmpId(transaction.getEmpId().trim());
 						dailyReport.setDateStr(transaction.getPunchDateStr());
@@ -226,7 +222,14 @@ public void generateNotPunchDailyAttendance(String sDate, String eDate, String o
 						dailyReport.setAttendanceStatus("Present");
 						dailyReport.setPunchInDevice("Punched");
 						String city = "";
-						 if(transaction.getDeviceName().contains("ESL") || transaction.getOrganization().contains("NMDC")) {
+						if(transaction.getOrganization().contains("HYD")) {
+							city = "HYDERABAD";
+						}else if(transaction.getOrganization().contains("NOIDA")) {
+							city = "NOIDA";
+						}else if(transaction.getOrganization().contains("MUMBAI")) {
+							city = "MUMBAI";
+						}
+						else if(transaction.getOrganization().contains("ESL") || transaction.getOrganization().contains("NMDC")) {
 							city = "Bokaro";
 							if(transaction.getOrganization().contains("NMDC"))
 								city = "Nagarnar";
