@@ -1,4 +1,4 @@
-package com.eikona.tech.controller;
+package com.eikona.tech.controller.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +30,7 @@ public class JwtAuthenticationController {
 	private MyUserDetailsService userDetailsService;
 	
 	
-	@RequestMapping(value="/rest/authenticate",method=RequestMethod.POST)
+	@RequestMapping(value="/apis/V1/authenticate",method=RequestMethod.POST)
 	public  ResponseEntity<?> createAuthenticateToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception{
 		try {
 			authenticationManager.authenticate(

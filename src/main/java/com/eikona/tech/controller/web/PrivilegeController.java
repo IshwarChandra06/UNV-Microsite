@@ -1,4 +1,4 @@
-package com.eikona.tech.controller;
+package com.eikona.tech.controller.web;
 
 import javax.validation.Valid;
 

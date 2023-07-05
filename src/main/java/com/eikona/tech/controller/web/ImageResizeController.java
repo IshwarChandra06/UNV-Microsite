@@ -1,4 +1,4 @@
-package com.eikona.tech.controller;
+package com.eikona.tech.controller.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

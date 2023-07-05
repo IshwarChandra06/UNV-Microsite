@@ -27,6 +27,7 @@ import com.eikona.tech.constants.ApplicationConstants;
 import com.eikona.tech.constants.AreaConstants;
 import com.eikona.tech.constants.DailyAttendanceConstants;
 import com.eikona.tech.constants.NumberConstants;
+import com.eikona.tech.dto.DailyReportRequestDto;
 import com.eikona.tech.dto.PaginationDto;
 import com.eikona.tech.entity.DailyReport;
 import com.eikona.tech.entity.Employee;
@@ -110,6 +111,7 @@ public void generateNotPunchDailyAttendance(String sDate, String eDate, String o
 				dailyReport.setOrganization((null == employee.getOrganization()?"":employee.getOrganization().getName()));
 				dailyReport.setDepartment((null == employee.getDepartment()?"":employee.getDepartment().getName()));
 				dailyReport.setDesignation((null == employee.getDesignation()?"":employee.getDesignation().getName()));
+				dailyReport.setMobile(employee.getMobile());
 				dailyReport.setGrade(employee.getGrade());
 				dailyReport.setCompany(employee.getCompany());
 				dailyReport.setEmployeeType("Employee");
@@ -169,7 +171,7 @@ public void generateNotPunchDailyAttendance(String sDate, String eDate, String o
 					DailyReport dailyReport = null;
 					
 					Date currDate = format.parse(transaction.getPunchDateStr());
-					if((transaction.getOrganization().contains("ESL") || transaction.getOrganization().contains("NMDC")) && transaction.getPunchDate().getHours() < 8) {
+					if((transaction.getOrganization().contains("ESL") || transaction.getOrganization().contains("NMDC")) && transaction.getPunchDate().getHours() < 9) {
 						
 						Calendar currDateCal = Calendar.getInstance();
 						currDateCal.setTime(currDate);
@@ -207,6 +209,7 @@ public void generateNotPunchDailyAttendance(String sDate, String eDate, String o
 						dailyReport.setOrganization(transaction.getOrganization());
 						dailyReport.setDepartment(transaction.getDepartment());
 						dailyReport.setGrade(transaction.getGrade());
+						dailyReport.setMobile(transaction.getMobile());
 						dailyReport.setDesignation(transaction.getDesignation());
 						dailyReport.setEmployeeType("Employee");
 						dailyReport.setUserType("Employee");
@@ -222,14 +225,7 @@ public void generateNotPunchDailyAttendance(String sDate, String eDate, String o
 						dailyReport.setAttendanceStatus("Present");
 						dailyReport.setPunchInDevice("Punched");
 						String city = "";
-						if(transaction.getOrganization().contains("HYD")) {
-							city = "HYDERABAD";
-						}else if(transaction.getOrganization().contains("NOIDA")) {
-							city = "NOIDA";
-						}else if(transaction.getOrganization().contains("MUMBAI")) {
-							city = "MUMBAI";
-						}
-						else if(transaction.getOrganization().contains("ESL") || transaction.getOrganization().contains("NMDC")) {
+						 if(transaction.getOrganization().contains("ESL") || transaction.getOrganization().contains("NMDC")) {
 							city = "Bokaro";
 							if(transaction.getOrganization().contains("NMDC"))
 								city = "Nagarnar";
@@ -433,5 +429,57 @@ public void generateNotPunchDailyAttendance(String sDate, String eDate, String o
 	@Override
 	public List<DailyReport> getAllDailyReport() {
 		 return (List<DailyReport>) dailyAttendanceRepository.findAll();
+	}
+	@Override
+	public Page<DailyReport> searchByField(DailyReportRequestDto dailyReportRequestDto, String orgName) {
+
+		Date startDate = null;
+		Date endDate = null;
+		SimpleDateFormat format = new SimpleDateFormat(ApplicationConstants.DATE_FORMAT_OF_US);
+		try {
+			if(!dailyReportRequestDto.getStartDate().isEmpty() && !dailyReportRequestDto.getEndDate().isEmpty()) {
+				
+				endDate = calendarUtil.getConvertedDate(format.parse(dailyReportRequestDto.getEndDate()),
+						NumberConstants.TWENTY_THREE, NumberConstants.FIFTY_NINE, NumberConstants.FIFTY_NINE);
+				startDate = calendarUtil.getConvertedDate(format.parse(dailyReportRequestDto.getStartDate()), 0, 0, 0);
+				
+			}
+			else {
+				endDate = calendarUtil.getConvertedDate(format.parse(format.format(new Date())),
+						NumberConstants.TWENTY_THREE, NumberConstants.FIFTY_NINE, NumberConstants.FIFTY_NINE);
+				startDate = calendarUtil.getPreviousDate(format.parse(format.format(new Date())), -3, 0, 0, 0);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		String sortOrder=dailyReportRequestDto.getSortOrder();
+		String sortField=dailyReportRequestDto.getSortField();
+		if (null == dailyReportRequestDto.getSortOrder() || dailyReportRequestDto.getSortOrder().isEmpty()) {
+			sortOrder = "asc";
+		}
+		if (null == dailyReportRequestDto.getSortField() || dailyReportRequestDto.getSortField().isEmpty()) {
+			sortField = "id";
+		}
+		Sort sort = sortOrder.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending()
+				: Sort.by(sortField).descending();
+
+		Pageable pageable = PageRequest.of(dailyReportRequestDto.getPageNo() - 1, dailyReportRequestDto.getPageSize(), sort);
+		
+		Specification<DailyReport> dateSpec = generalSpecificationDailyAttendance.dateSpecification(startDate, endDate, ApplicationConstants.DATE);
+		Specification<DailyReport> empIdSpec = generalSpecificationDailyAttendance.stringSpecification(dailyReportRequestDto.getEmpId(), DailyAttendanceConstants.EMPLOYEE_ID);
+		Specification<DailyReport> empNameSpec = generalSpecificationDailyAttendance.stringSpecification(dailyReportRequestDto.getName(), DailyAttendanceConstants.EMPLOYEE_NAME);
+		Specification<DailyReport> companySpec = generalSpecificationDailyAttendance.stringSpecification(dailyReportRequestDto.getCompany(), DailyAttendanceConstants.COMPANY);
+		Specification<DailyReport> userOrgSpec = generalSpecificationDailyAttendance.stringSpecification(orgName, AreaConstants.ORGANIZATION);
+		Specification<DailyReport> deptSpec = generalSpecificationDailyAttendance.stringSpecification(dailyReportRequestDto.getDepartment(), DailyAttendanceConstants.DEPARTMENT);
+		Specification<DailyReport> desiSpec = generalSpecificationDailyAttendance.stringSpecification(dailyReportRequestDto.getDesignation(), DailyAttendanceConstants.DESIGNATION);
+		Specification<DailyReport> statusSpec = generalSpecificationDailyAttendance.stringSpecification(dailyReportRequestDto.getAttendanceStatus(), DailyAttendanceConstants.ATTENDANCE_STATUS);
+		Specification<DailyReport> shiftSpec = generalSpecificationDailyAttendance.stringSpecification(dailyReportRequestDto.getShift(), DailyAttendanceConstants.SHIFT);
+		Specification<DailyReport> punchStatusSpec = generalSpecificationDailyAttendance.stringEqualSpecification(dailyReportRequestDto.getPunchStatus(),"punchInDevice");
+		Page<DailyReport> page = dailyAttendanceRepository.findAll(statusSpec.and(dateSpec).and(empIdSpec)
+				.and(empNameSpec).and(deptSpec).and(desiSpec).and(userOrgSpec).and(shiftSpec).and(punchStatusSpec).and(companySpec), pageable);
+		
+		
+		return page;
+	
 	}
 }

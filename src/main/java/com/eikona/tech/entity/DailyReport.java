@@ -134,7 +134,18 @@ public class DailyReport implements Serializable {
 	
 	@Column
 	private String punchInDevice;
+	
+	@Column
+	private String mobile;
 
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
 
 	public String getOrganization() {
 		return organization;

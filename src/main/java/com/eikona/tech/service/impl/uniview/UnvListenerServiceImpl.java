@@ -18,6 +18,7 @@ import com.eikona.tech.entity.Transaction;
 import com.eikona.tech.repository.DeviceRepository;
 import com.eikona.tech.repository.EmployeeRepository;
 import com.eikona.tech.repository.TransactionRepository;
+import com.eikona.tech.service.impl.model.DailyAttendanceFromEventServiceImpl;
 import com.eikona.tech.util.SavingCropImageUtil;
 
 @Service
@@ -34,6 +35,9 @@ public class UnvListenerServiceImpl {
 	
 	@Autowired
 	private SavingCropImageUtil savingCropImageUtil;
+	
+	@Autowired
+	private DailyAttendanceFromEventServiceImpl attendanceFromEventServiceImpl;
 	
 	public Device saveDeviceInfo(String response) {
 
@@ -98,6 +102,7 @@ public class UnvListenerServiceImpl {
 				transaction.setName(employee.getName());
 				transaction.setCompany(employee.getCompany());
 				transaction.setGrade(employee.getGrade());
+				transaction.setMobile(employee.getMobile());
 				if(null!=employee.getDepartment())
 					transaction.setDepartment(employee.getDepartment().getName());
 				
@@ -143,5 +148,7 @@ public class UnvListenerServiceImpl {
 		}
 		
 		transactionRepository.save(transaction);
+		
+		attendanceFromEventServiceImpl.generateDailyAttendance(transaction);
 	}
 }

@@ -94,6 +94,9 @@ public class Transaction implements Serializable{
 	@Column
 	private String enrollStatus;
 	
+	@Column
+	private String mobile;
+	
 	public String getOrganization() {
 		return organization;
 	}
@@ -298,6 +301,14 @@ public class Transaction implements Serializable{
 
 	public void setEnrollStatus(String enrollStatus) {
 		this.enrollStatus = enrollStatus;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
 	}
 	
 	

@@ -38,6 +38,8 @@ public interface TransactionRepository extends DataTablesRepository<Transaction,
 			+ "where tr.punchDateStr =:dateStr and tr.deviceName=:name and tr.name='Unregistered' GROUP BY tr.organization")
 	Long findUnregisterCountByDateAndDeviceCustom(String dateStr, String name);
 
+	List<Transaction> findByOrganization(String name);
+
 	
 
 }

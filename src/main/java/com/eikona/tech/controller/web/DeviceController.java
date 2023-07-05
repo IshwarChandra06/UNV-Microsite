@@ -1,4 +1,4 @@
-package com.eikona.tech.controller;
+package com.eikona.tech.controller.web;
 
 import java.security.Principal;
 import java.util.List;

@@ -16,7 +16,7 @@ public interface DailyAttendanceRepository extends DataTablesRepository<DailyRep
 				+ " dr.date >= :sDate and dr.date <= :eDate and dr.company = :company")
 		List<DailyReport> findByDateAndOrganization(Date sDate,Date eDate, String company);
 
-	DailyReport findByEmpIdAndDateAndOrganizationAndPunchInDevice(String trim, Date currDate, String organization, String punchStatus);
+	DailyReport findByEmpIdAndDateAndOrganizationAndPunchInDevice(String empId, Date currDate, String organization, String punchStatus);
 	
 	@Query("SELECT dr FROM com.eikona.tech.entity.DailyReport as dr where dr.empId = :empId and dr.date between :sDate and :eDate "
 			+"order by dr.date asc")
@@ -24,6 +24,10 @@ public interface DailyAttendanceRepository extends DataTablesRepository<DailyRep
 
 	@Query("SELECT dr.empId FROM com.eikona.tech.entity.DailyReport as dr where dr.date >= :startDate and dr.date <= :endDate and dr.organization = :organization")
 	List<String> findByDateAndOrganizationCustom(Date startDate, Date endDate, String organization);
+
+	List<DailyReport> findByOrganization(String name);
+	
+	DailyReport findByEmpIdAndDateAndOrganization(String empId, Date currDate, String organization);
 	
 
 }
